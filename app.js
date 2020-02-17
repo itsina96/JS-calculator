@@ -1,14 +1,11 @@
-let numbers = document.getElementsByTagName("button");
-let display = document.getElementById("display");
+const calculator = document.querySelector('.calculator');
+const keys = calculator.querySelector('.keys');
 
-for(let i = 0; i < numbers.length; i++) {
-  numbers[i].addEventListener("click", function () {
-    let buttonValue = this.textContent;
-    if (buttonValue === "clear") {
-      display.innerHTML = "0";
-    }
-    else {
-      display.innerHTML = buttonValue;
-    }
-  })
+keys.addEventListener('click', e => {
+const key = e.target
+const action = key.dataset.action
+
+if(!action) {
+  console.log('numer key!')
 }
+});
