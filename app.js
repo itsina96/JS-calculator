@@ -19,37 +19,38 @@ keys.addEventListener('click', e => {
                 // basically, if the first clicked key isn't '0' && user clicks another key(s), we want to append it to the displayed number.
                 display.textContent = displayedNum + keyContent;
             }
+            calculator.dataset.previousKey = 'number'
         }
         
         // Concatenate/append '.' to the displayed number when clicked.
         if (action === 'decimal') {
             // Do nothing if string has a dot already 
-            if(!displayedNum.includes('.')) {
+            if(!displayedNum.includes('.')) { //why ! in front of displayedNum? 
                 display.textContent = displayedNum + '.';
-            } 
+            } else if (previousKeyType === 'operator') {
+                display.textContent = "0."; //if user hits decimal key after operator key, it should start with 0. 
+                )
+            }
+            calculator.dataset.previousKeyType = 'decimal'
         }
         
         if (action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide') {
-            // key.classList.add('depressed')
-            
+ 
             // A custom attribute to check if the previous key is an operator before update the display to the clicked key.
             calculator.dataset.previousKeyType = 'operator';
-            
             calculator.dataset.firstValue = displayedNum;
             calculator.dataset.operator = action;
         }
         
-        // // Release the pressed state by removing 'depressed' class through a forEach loop.
-        // Array.from(key.parentNode.children).forEach(k => k.classList.remove('depressed'));
-        
         if(action === 'clear') {
             display.textContent = 0; //or '0' as a string??
+            calculator.dataset.previousKey = 'clear'
         }
         
         const calculate = (n1, operator, n2) => {
             let result = '';
             
-            // why parseFloat()? firstValue & secondValue are strings at this point. (1+1 = 11) parseFloat converts a string into a float (number with decimal places).
+            // why parseFloat()? because firstValue & secondValue are strings at this point. (1+1 = 11) parseFloat converts a string into a float (number with decimal places).
             if (operator === 'add') {
                 result = parseFloat(n1) + parseFloat(n2);
             } else if (operator === 'subtract') {
@@ -63,13 +64,13 @@ keys.addEventListener('click', e => {
         }
         
         if(action === 'calculate') {
-            const firstValue = calculator.dataset.firstValue;
+            const firstValue = calculator.dataset.firstValue; //Q: declare const and find it at the same time..?!?
             const operator = calculator.dataset.operator;
             const secondValue = displayedNum;
             
             display.textContent = calculate(firstValue, operator, secondValue);
+            calculator.dataset.previousKey = 'calculate'
         }
-        
     }
     
 });
