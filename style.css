@@ -1,11 +1,59 @@
-.calc {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-  }
-  
-  #display {
-    background: powderblue;
-    width: 60px;
-    height: 30px;
-  }
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.calculator {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: minmax(120px, auto) repeat(5, 100px);
+}
+
+/* '>' allows us to select all buttons inside of .calculator  */
+.calculator > button {
+    cursor: pointer;
+    font-size: 2rem;
+    border: 1px solid transparent;
+    background-color: lightgreen;
+    outline: none;
+}
+
+.calculator > button:hover {
+    background-color: orange;
+}
+
+.AC {
+    grid-column: span 2;
+}
+
+.display {
+    grid-column: 1 / -1;
+    background-color: lightgrey;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 15px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.equals {
+    grid-column: span 2;
+}
+
+.display .previous {
+    font-size: 1.5rem;
+    color: grey;
+}
+.display .current {
+    font-size: 2.5rem;
+}
