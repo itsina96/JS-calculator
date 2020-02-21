@@ -1,76 +1,119 @@
-const calculator = document.querySelector('.calculator');
-const keys = calculator.querySelector('.keys');
-const display = document.querySelector('.display')
-
-keys.addEventListener('click', e => {
-    // Instead of using foreach or for loop, we can use an event delegation pattern to listen (what's the best practice though?).
-    if (e.target.matches('button')) {
-        const key = e.target;
-        const action = key.dataset.action;
-        const keyContent = key.textContent;
-        const displayedNum = display.textContent;
-        const previousKeyType = calculator.dataset.previousKeyType; 
-        
-        if(!action) {
-            // Replace the displayed/default number '0' with the clicked key (also, after operator is applied).
-            if(displayedNum === '0' || previousKeyType === 'operator') {
-                display.textContent = keyContent;
-            } else {
-                // basically, if the first clicked key isn't '0' && user clicks another key(s), we want to append it to the displayed number.
-                display.textContent = displayedNum + keyContent;
-            }
-            calculator.dataset.previousKey = 'number'
-        }
-        
-        // Concatenate/append '.' to the displayed number when clicked.
-        if (action === 'decimal') {
-            // Do nothing if string has a dot already 
-            if(!displayedNum.includes('.')) { //why ! in front of displayedNum? 
-                display.textContent = displayedNum + '.';
-            } else if (previousKeyType === 'operator') {
-                display.textContent = "0."; //if user hits decimal key after operator key, it should start with 0. 
-                )
-            }
-            calculator.dataset.previousKeyType = 'decimal'
-        }
-        
-        if (action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide') {
- 
-            // A custom attribute to check if the previous key is an operator before update the display to the clicked key.
-            calculator.dataset.previousKeyType = 'operator';
-            calculator.dataset.firstValue = displayedNum;
-            calculator.dataset.operator = action;
-        }
-        
-        if(action === 'clear') {
-            display.textContent = 0; //or '0' as a string??
-            calculator.dataset.previousKey = 'clear'
-        }
-        
-        const calculate = (n1, operator, n2) => {
-            let result = '';
-            
-            // why parseFloat()? because firstValue & secondValue are strings at this point. (1+1 = 11) parseFloat converts a string into a float (number with decimal places).
-            if (operator === 'add') {
-                result = parseFloat(n1) + parseFloat(n2);
-            } else if (operator === 'subtract') {
-                result = parseFloat(n1) - parseFloat(n2);
-            } else if (operator === 'multiply') {
-                result = parseFloat(n1) * parseFloat(n2);
-            } else if (operator === 'divide') {
-                result = parseFloat(n1) / parseFloat(n2);
-            }
-            return result;
-        }
-        
-        if(action === 'calculate') {
-            const firstValue = calculator.dataset.firstValue; //Q: declare const and find it at the same time..?!?
-            const operator = calculator.dataset.operator;
-            const secondValue = displayedNum;
-            
-            display.textContent = calculate(firstValue, operator, secondValue);
-            calculator.dataset.previousKey = 'calculate'
-        }
+class Calculator {
+    // Set previous & current text elements inside this class
+    constructor(previousTextElement, currentTextElement) {
+        this.previousTextElement = previousTextElement;
+        this.currentTextElement = currentTextElement;
+        this.clear();
     }
     
-});
+    clear() {
+        this.current= '';
+        this.previous = '';
+        this.operator = undefined;
+    }
+    
+    delete() {
+        this.current = this.current.toString().slice(0, -1); 
+    }
+    
+    
+    appendNumber(number) {
+        if(number === '.' && this.current.includes('.')) return // 'return' simply makes it unable to execute any further and cancel the function.
+        this.current = this.current.toString() + number.toString(); // why toString()? because when we press more than one number key, JS will try to add those actual numbers together instead of append it to the previous one.
+    }
+    
+    chooseOperation(operation) {
+        if (this.current === '') return 
+        if (this.previous !== '') {
+            this.compute();
+        }
+        this.operation = operation;
+        this.previous = this.current;
+        this.current = '';
+    }
+    
+    compute() {
+        let computation;
+        // now change the string to the actual numbers for computation.
+        const prev = parseFloat(this.previous);
+        const current = parseFloat(this.current);
+        if (isNaN(prev) || isNaN(current)) return; 
+        switch (this.operation) {
+            case '+':
+            computation = prev + current;
+            break;
+            
+            case '-':
+            computation = prev - current;
+            break;
+            
+            case '*':
+            computation = prev * current;
+            break;
+            
+            case '÷':
+            computation = prev / current;
+            break;
+            
+            default:
+            return;
+        }
+        this.current = computation;
+        this.opearation = undefined;
+        this.previous = '';
+    }
+    
+    getDisplayNumber(number) {
+        return number;
+    }
+
+    updateDisplay() {
+        this.currentTextElement.innerText = 
+        this.getDisplayNumber(this.current);
+        if (this.operation != null) {
+            this.previousTextElement.innerText = 
+            `${this.getDisplayNumber(this.previous)} ${this.operation}`
+        }
+    }
+}
+
+const numberBtns = document.querySelectorAll('.number');
+const operationBtns = document.querySelectorAll('.operator');
+const equalsBtn = document.querySelector('.equals');
+const deleteBtn = document.querySelector('.delete');
+const clearBtn = document.querySelector('.clear');
+const previousTextElement = document.querySelector('.previous');
+const currentTextElement = document.querySelector('.current');
+
+const calculator = new Calculator (previousTextElement, currentTextElement);
+
+
+numberBtns.forEach(button => {
+    button.addEventListener('click', () => {
+        calculator.appendNumber(button.innerText);
+        // and then display values get updated.
+        calculator.updateDisplay();
+    })
+})
+
+operationBtns.forEach(button => {
+    button.addEventListener('click', () => {
+        calculator.chooseOperation(button.innerText);
+        calculator.updateDisplay();
+    })
+})
+
+equalsBtn.addEventListener('click', button => {
+    calculator.compute();
+    calculator.updateDisplay();
+})
+
+clearBtn.addEventListener('click', button => {
+    calculator.clear();
+    calculator.updateDisplay();
+})
+
+deleteBtn.addEventListener('click', button => {
+    calculator.delete();
+    calculator.updateDisplay();
+})
