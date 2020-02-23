@@ -19,7 +19,7 @@ class Calculator {
     
     appendNumber(number) {
         if(number === '.' && this.current.includes('.')) return // 'return' simply makes it unable to execute any further and cancel the function.
-        this.current = this.current.toString() + number.toString(); // why toString()? because when we press more than one number key, JS will try to add those actual numbers together instead of append it to the previous one.
+        this.current = this.current.toString() + number.toString(); // why toString()? because when we press more than one number key, JS will actually try to add those actual numbers instead of append it to the previous one.
     }
     
     chooseOperation(operation) {
@@ -38,45 +38,36 @@ class Calculator {
         const prev = parseFloat(this.previous);
         const current = parseFloat(this.current);
         if (isNaN(prev) || isNaN(current)) return; 
-        switch (this.operation) {
+        switch (this.operation) { 
             case '+':
-            computation = prev + current;
-            break;
+            computation = prev + current
+            break
             
             case '-':
-            computation = prev - current;
-            break;
+            computation = prev - current
+            break
             
             case '*':
-            computation = prev * current;
-            break;
+            computation = prev * current
+            break
             
             case '÷':
-            computation = prev / current;
-            break;
+            computation = prev / current
+            break
             
             default:
-            return;
+            return
         }
         this.current = computation;
         this.opearation = undefined;
         this.previous = '';
     }
-    
-    getDisplayNumber(number) {
-        return number;
-    }
 
     updateDisplay() {
-        this.currentTextElement.innerText = 
-        this.getDisplayNumber(this.current);
-        if (this.operation != null) {
-            this.previousTextElement.innerText = 
-            `${this.getDisplayNumber(this.previous)} ${this.operation}`
-        } else {
-            this.previousTextElement.innerText = '';
-        }
+        this.currentTextElement.innerText = this.current;
+        this.previousTextElement.innerText = this.previous;
     }
+    
 }
 
 const numberBtns = document.querySelectorAll('.number');
@@ -88,7 +79,6 @@ const previousTextElement = document.querySelector('.previous');
 const currentTextElement = document.querySelector('.current');
 
 const calculator = new Calculator (previousTextElement, currentTextElement);
-
 
 numberBtns.forEach(button => {
     button.addEventListener('click', () => {
