@@ -1,210 +1,66 @@
-:root {
-    --clr-point: #3ac98c;
-    --clr-dark: #404040;
+
+html {
+  box-sizing: border-box;
 }
 
 body {
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    background: #f2f2f0;
-    font-family: "Karla", sans-serif;
-    color: var(--clr-dark);
+  margin: 0;
+  padding: 0;
+  font-family: "Inconsolata", sans-serif;
+  background-color: #ECEFF1;
 }
 
-/* Entire box  */
-.container {
-    width: 420px;
-    height: 600px;
-    background: white;
-    display: inline-block;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
-    border-radius: 3%;
+.calculator {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: minmax(120px, auto) repeat(5, 100px);
 }
 
-/* Header - date & clear all starts here */
-.header {
-    min-height: 50px;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 25px 0;
-    width: 100%;
-}
 
-#date {
-    font-size: 1.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    color: var(--clr-point);
-    font-weight: 700;
-}
-
-.fa-trash {
-    font-size: 1.15rem;
-    color: var(--clr-dark);
+/* '>' allows us to select all buttons inside of .calculator  */
+.calculator > button {
     cursor: pointer;
-    display: inline-block;
-}
-
-.fa-redo:hover {
-    color: var(--clr-point);
-    transition: all 0.1s ease-in-out;
-    animation: animate 1s linear infinite;
-}
-
-@keyframes animate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(365deg);
-    }
-}
-
-/* Main body starts here */
-.collection {
-    overflow: scroll;
-    padding: 10px 45px 20px 45px;
-    margin: 0;
-    min-height: 370px;
-    max-height: 370px;
-    max-width: 330px;
-}
-
-label {
-    margin-bottom: 2em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-[type="checkbox"] {
-    opacity: 0;
-    position: absolute;
-    cursor: pointer;
-}
-
-.custom-checkbox {
-    --size: 0.95em;
-    display: inline-block;
-    width: var(--size);
-    height: var(--size);
-    cursor: pointer;
-    border: 1px solid var(--clr-dark);
-    margin-right: var(--size);
-    transform: scale(1);
-    transition: transform 100ms ease-in-out;
-} 
-
-label:hover .custom-checkbox {
-    transform: scale(1.2);
-}
-
-.fa-times {
-    font-size: 0.9rem;
-}
-
-.fa-times:hover {
-    color: var(--clr-point);
-    scale: 2rem;
-}
-
-[type="checkbox"]:checked + label {
-    opacity: 0.5;
-}
-
-[type="checkbox"]:checked + label .custom-checkbox::before{
-    content: "\f00c";
-    font-family: FontAwesome;
-    text-decoration: inherit;
-    color: var(--clr-point);
-    font-size: 1.3rem;
-    display: flex;
-    justify-content: end;
-    margin: -3px;
-    z-index: 2;
-}
-/* for delete icon */
-.delete-item {
-    margin-left: auto;
-}
-
-/* Input area - bottom starts here */
-button {
-    background: transparent;
-    border: none;
+    font-size: 2rem;
+    border: 1px solid transparent;
+    background-color:#303030;
     outline: none;
-    padding: 0;
-}
-
-.input-area {
-    min-height: 50px;
-    width: 100%;
-}
-
-#task-form {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 20px 0 35px;
-    margin: 0 10px;
-}
-
-.addBtn {
-    width: 70px;
-    height: 70px;
-    background-color: var(--clr-point);
-    border-radius: 50%;
-    transition: all 0.1s ease-in-out;
-    font-size: 50px;
     color: white;
-    text-align: center;
-    line-height: 70px;
-    font-weight: lighter;
 }
 
-.addBtn:hover {
-    transform: scale(1.05);
-    background-color: #20a169;
-    animation: popBtn 0.4s linear 1;
-}
-
-@keyframes popBtn{
-    50%  {transform: scale(1.2)};
-}
-
-input[type='text'] {
-    border: 0;
-    color: var(--clr-dark);
-    outline: none;
-    cursor: pointer;
-    width: 250px;
-    font-size: 1.6rem;
-    margin-right: auto;
-}
-
-/* #task:focus {
-    border-bottom: 2px solid gray;
-} */
-
-::placeholder {
-    font-size: 1rem;
-    letter-spacing: 0.2rem;
-    transition: opacity 250ms ease-in;
-    height: 30px;
-}
-
-#task:focus::placeholder{
-    opacity: 0;
+.calculator > button:hover {
+    background-color: #FE7651;
 
 }
 
+.AC {
+    grid-column: span 2;
+}
+
+.display {
+    grid-column: 1 / -1;
+    background-color:#303030;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 15px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.equals {
+    grid-column: span 2;
+}
+
+.display .previous, .operator {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.display .current {
+    font-size: 2.5rem;
+    color: white;
+}
